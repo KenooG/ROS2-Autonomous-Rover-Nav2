@@ -1,0 +1,21 @@
+slam_toolbox:
+  ros__parameters:
+    use_sim_time: true
+    odom_frame: "perseverance/odom"
+    map_frame: "map"
+    base_frame: "perseverance/base_link"
+    scan_topic: "/scan"
+    mode: "mapping"
+    transform_timeout: 0.5
+    map_start_x: -150.0
+    map_start_y: -150.0
+    map_start_size_dist: 300.0
+    resolution: 0.05
+    map_update_interval: 1.0
+    
+    max_laser_range: 55.0
+    minimum_time_interval: 0.1
+    transform_publish_period: 0.05
+    stack_size: 40000000
+    minimum_travel_distance: 0.5
+    minimum_travel_heading: 0.2

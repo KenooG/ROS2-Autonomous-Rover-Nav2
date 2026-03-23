@@ -1,0 +1,179 @@
+amcl:
+  ros__parameters:
+    use_sim_time: True
+    base_frame_id: "perseverance/base_link"
+    odom_frame_id: "perseverance/odom"
+    scan_topic: "/scan"
+
+bt_navigator:
+  ros__parameters:
+    use_sim_time: True
+    global_frame: "map"
+    robot_base_frame: "perseverance/base_link"
+    odom_frame: "perseverance/odom"
+    default_nav_to_pose_bt_xml: "/opt/ros/jazzy/share/nav2_bt_navigator/behavior_trees/navigate_to_pose_w_replanning_and_recovery.xml"
+
+controller_server:
+  ros__parameters:
+    use_sim_time: True
+    controller_frequency: 20.0
+    controller_plugins: ["FollowPath"]
+    FollowPath:
+      plugin: "nav2_regulated_pure_pursuit_controller::RegulatedPurePursuitController"
+      desired_linear_vel: 2.2 
+      lookahead_dist: 4.5 
+      min_lookahead_dist: 2.0
+      max_lookahead_dist: 7.0
+      use_velocity_scaled_lookahead_dist: True
+      use_regulated_linear_velocity_scaling: True 
+      regulated_linear_scaling_min_speed: 0.2
+      regulated_linear_scaling_min_radius: 2.0 
+      inflation_cost_scaling_factor: 15.0 
+
+planner_server:
+  ros__parameters:
+    use_sim_time: True
+    planner_plugins: ["GridBased"]
+    GridBased:
+      plugin: "nav2_navfn_planner::NavfnPlanner"
+      tolerance: 1.0 
+      use_astar: True
+      allow_unknown: True
+
+local_costmap:
+  local_costmap:
+    ros__parameters:
+      use_sim_time: True
+      update_frequency: 10.0
+      publish_frequency: 5.0
+      global_frame: "perseverance/odom"
+      robot_base_frame: "perseverance/base_link"
+      rolling_window: True
+      width: 50
+      height: 50
+      resolution: 0.1
+      
+      footprint: "[ [2.5, 4.0], [2.5, -4.0], [-2.5, -4.0], [-2.5, 4.0] ]"
+      plugins: ["obstacle_layer", "inflation_layer"]
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: "scan_source"
+        scan_source:
+          topic: "/scan"
+          marking: True
+          clearing: True 
+          obstacle_max_range: 50.0
+          raytrace_max_range: 55.0
+          min_obstacle_height: 0.0 
+          max_obstacle_height: 3.0
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 8.0 
+        cost_scaling_factor: 1.5 
+
+global_costmap:
+  global_costmap:
+    ros__parameters:
+      use_sim_time: True
+      robot_base_frame: "perseverance/base_link"
+      global_frame: "map"
+      rolling_window: True 
+      width: 400
+      height: 400
+      resolution: 0.1
+      track_unknown_space: True
+      footprint: "[ [2.5, 4.0], [2.5, -4.0], [-2.5, -4.0], [-2.5, 4.0] ]"
+      plugins: ["static_layer", "obstacle_layer", "inflation_layer"]
+      static_layer:
+        plugin: "nav2_costmap_2d::StaticLayer"
+        map_subscribe_transient_local: True
+      obstacle_layer:
+        plugin: "nav2_costmap_2d::ObstacleLayer"
+        enabled: True
+        observation_sources: "scan_source"
+        scan_source:
+          topic: "/scan"
+          marking: True
+          clearing: True 
+          obstacle_max_range: 50.0
+          raytrace_max_range: 55.0
+          min_obstacle_height: 0.0
+          max_obstacle_height: 3.0
+      inflation_layer:
+        plugin: "nav2_costmap_2d::InflationLayer"
+        inflation_radius: 12.0
+        cost_scaling_factor: 1.0 
+
+collision_monitor:
+  ros__parameters:
+    use_sim_time: True
+    base_frame_id: "perseverance/base_link"
+    odom_frame_id: "perseverance/odom"
+    cmd_vel_in_topic: "cmd_vel_smoothed"
+    cmd_vel_out_topic: "cmd_vel"
+    transform_tolerance: 0.5
+    source_timeout: 1.0
+    stop_pub_timeout: 2.0
+    observation_sources: ["scan_source"]
+    scan_source:
+      type: "scan"
+      topic: "/scan"
+    polygons: ["FootprintApproach"]
+    FootprintApproach:
+      type: "polygon"
+      action_type: "approach"
+      footprint_topic: "/local_costmap/published_footprint"
+      time_before_collision: 1.0
+
+docking_server:
+  ros__parameters:
+    use_sim_time: True
+    controller_frequency: 50.0
+    base_frame: "perseverance/base_link"
+    fixed_frame: "perseverance/odom"
+    dock_plugins: ["simple_charging_dock"]
+    simple_charging_dock:
+      plugin: "opennav_docking::SimpleChargingDock"
+      dock_type: "geometry_msgs/PoseStamped"
+
+route_server:
+  ros__parameters:
+    use_sim_time: True
+
+lifecycle_manager_navigation:
+  ros__parameters:
+    use_sim_time: True
+    autostart: True
+    node_names: ["controller_server", "smoother_server", "planner_server", "behavior_server", "bt_navigator", "waypoint_follower", "velocity_smoother", "collision_monitor", "route_server", "docking_server"]
+
+smoother_server:
+  ros__parameters:
+    use_sim_time: True
+    smoother_plugins: ["simple_smoother"]
+    simple_smoother:
+      plugin: "nav2_smoother::SimpleSmoother"
+
+behavior_server:
+  ros__parameters:
+    use_sim_time: True
+    local_frame: "perseverance/odom"
+    global_frame: "map"
+    robot_base_frame: "perseverance/base_link"
+    behavior_plugins: ["spin", "backup", "drive_on_heading", "wait"]
+
+waypoint_follower:
+  ros__parameters:
+    use_sim_time: True
+    loop_rate: 20
+
+velocity_smoother:
+  ros__parameters:
+    use_sim_time: True
+    smoothing_frequency: 20.0
+    max_velocity: [2.2, 0.0, 1.2]
+    min_velocity: [-2.2, 0.0, -1.2]
+    max_acceleration: [0.8, 0.0, 0.8] 
+    max_deceleration: [-2.5, 0.0, -1.5]
+    deadband_velocity: [0.0, 0.0, 0.0]
+    velocity_timeout: 1.0

@@ -1,0 +1,38 @@
+<?xml version="1.0" ?>
+<sdf version="1.9">
+  <model name="MarsRock">
+    <static>true</static>
+    <link name="link">
+      <collision name="collision">
+        <geometry>
+          <mesh>
+            <uri>model://MarsRock/meshes/FallingRock01_Collider.dae</uri>
+            <scale>25 25 25</scale>
+          </mesh>
+        </geometry>
+      </collision>
+
+      <visual name="visual">
+        <geometry>
+          <mesh>
+            <uri>model://MarsRock/meshes/FallingRock01.dae</uri>
+            <scale>25 25 25</scale>
+          </mesh>
+        </geometry>
+        <material>
+          <ambient>1 1 1 1</ambient>
+          <diffuse>1 1 1 1</diffuse>
+          <specular>0.5 0.5 0.5 1</specular>
+          <pbr>
+            <metal>
+              <albedo_map>model://MarsRock/materials/textures/stone_9_basecolor-4K.png</albedo_map>
+              <normal_map>model://MarsRock/materials/textures/stone_9_normal-4K.png</normal_map>
+              <roughness_map>model://MarsRock/materials/textures/stone_9_roughness-4K.png</roughness_map>
+              <ambient_occlusion_map>model://MarsRock/materials/textures/stone_9_ambientocclusion-4K.png</ambient_occlusion_map>
+            </metal>
+          </pbr>
+        </material>
+      </visual>
+    </link>
+  </model>
+</sdf>

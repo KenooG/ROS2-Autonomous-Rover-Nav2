@@ -1,0 +1,16 @@
+material BoxFood/Text
+{
+  technique
+  {
+    pass
+    {
+      texture_unit
+      {
+        texture FOOD.png
+        # To sprawi, że napis nie będzie rozciągnięty, jeśli sześcian jest równy
+        filtering anisotropic
+        max_anisotropy 16
+      }
+    }
+  }
+}

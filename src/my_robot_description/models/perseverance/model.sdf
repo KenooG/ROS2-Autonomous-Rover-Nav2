@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='utf-8'?>
+<sdf version="1.8">
+  <model name="perseverance">
+    <self_collide>false</self_collide>
+
+    <link name="base_link">
+      <inertial>
+        <pose>0 0 0.1 0 0 0</pose>
+        <mass>800.0</mass> 
+        <inertia>
+          <ixx>400.0</ixx><iyy>700.0</iyy><izz>900.0</izz>
+        </inertia>
+      </inertial>
+      <visual name="v">
+        <pose>0 0 0 0 0 1.5707</pose>
+        <geometry><mesh><uri>file:///home/keno/ros2_ws/src/my_robot_description/models/perseverance/resources/perseverance.dae</uri><scale>2 2 2</scale></mesh></geometry>
+      </visual>
+      <collision name="c">
+        <pose>0 0 0.7 0 0 0</pose>
+        <geometry><box><size>2.2 0.9 0.5</size></box></geometry>
+      </collision>
+    </link>
+
+    <link name="lidar_link">
+      <pose>0.0 0 2.0 0 0 0</pose> 
+      <sensor name="lidar" type="gpu_lidar">
+        <topic>/model/perseverance/scan</topic>
+        <update_rate>15</update_rate>
+        <ray>
+          <scan><horizontal><samples>360</samples><resolution>1</resolution><min_angle>-3.14159</min_angle><max_angle>3.14159</max_angle></horizontal></scan>
+          <range><min>6.0</min><max>50.0</max></range>
+        </ray>
+      </sensor>
+    </link>
+    <joint name="lidar_joint" type="fixed"><parent>base_link</parent><child>lidar_link</child></joint>
+
+    <link name="camera_link">
+      <pose>3.5 0 2.5 0 0.15 -0.1</pose> 
+      <sensor name="camera" type="camera">
+        <topic>/model/perseverance/camera</topic>
+        <update_rate>15</update_rate>
+        <camera>
+          <horizontal_fov>1.047</horizontal_fov>
+          <image><width>800</width><height>600</height></image>
+          <clip><near>0.1</near><far>100.0</far></clip>
+        </camera>
+      </sensor>
+    </link>
+    <joint name="camera_joint" type="fixed"><parent>base_link</parent><child>camera_link</child></joint>
+
+    <link name="left_front">
+      <pose>2.2 2.0 0.6 0 0 0</pose>
+      <inertial><mass>50.0</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+      <visual name="v"><pose>0 0 0 1.5707 0 0</pose><geometry><cylinder><radius>0.6</radius><length>0.5</length></cylinder></geometry></visual>
+      <collision name="c">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><sphere><radius>0.6</radius></sphere></geometry>
+        <surface>
+          <contact><ode><kp>1000000.0</kp><kd>100.0</kd></ode></contact>
+          <friction><ode><mu>1.0</mu><mu2>0.5</mu2><fdir1>1 0 0</fdir1></ode></friction>
+        </surface>
+      </collision>
+    </link>
+
+    <link name="left_back">
+      <pose>-2.2 2.0 0.6 0 0 0</pose>
+      <inertial><mass>50.0</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+      <visual name="v"><pose>0 0 0 1.5707 0 0</pose><geometry><cylinder><radius>0.6</radius><length>0.5</length></cylinder></geometry></visual>
+      <collision name="c">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><sphere><radius>0.6</radius></sphere></geometry>
+        <surface>
+          <contact><ode><kp>1000000.0</kp><kd>100.0</kd></ode></contact>
+          <friction><ode><mu>1.0</mu><mu2>0.5</mu2><fdir1>1 0 0</fdir1></ode></friction>
+        </surface>
+      </collision>
+    </link>
+
+    <link name="right_front">
+      <pose>2.2 -2.0 0.6 0 0 0</pose>
+      <inertial><mass>50.0</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+      <visual name="v"><pose>0 0 0 1.5707 0 0</pose><geometry><cylinder><radius>0.6</radius><length>0.5</length></cylinder></geometry></visual>
+      <collision name="c">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><sphere><radius>0.6</radius></sphere></geometry>
+        <surface>
+          <contact><ode><kp>1000000.0</kp><kd>100.0</kd></ode></contact>
+          <friction><ode><mu>1.0</mu><mu2>0.5</mu2><fdir1>1 0 0</fdir1></ode></friction>
+        </surface>
+      </collision>
+    </link>
+
+    <link name="right_back">
+      <pose>-2.2 -2.0 0.6 0 0 0</pose>
+      <inertial><mass>50.0</mass><inertia><ixx>10</ixx><iyy>10</iyy><izz>10</izz></inertia></inertial>
+      <visual name="v"><pose>0 0 0 1.5707 0 0</pose><geometry><cylinder><radius>0.6</radius><length>0.5</length></cylinder></geometry></visual>
+      <collision name="c">
+        <pose>0 0 0 0 0 0</pose>
+        <geometry><sphere><radius>0.6</radius></sphere></geometry>
+        <surface>
+          <contact><ode><kp>1000000.0</kp><kd>100.0</kd></ode></contact>
+          <friction><ode><mu>1.0</mu><mu2>0.5</mu2><fdir1>1 0 0</fdir1></ode></friction>
+        </surface>
+      </collision>
+    </link>
+
+    <joint name="left_front_j" type="revolute"><child>left_front</child><parent>base_link</parent><axis><xyz>0 1 0</xyz><limit><effort>50000</effort></limit></axis></joint>
+    <joint name="left_back_j" type="revolute"><child>left_back</child><parent>base_link</parent><axis><xyz>0 1 0</xyz><limit><effort>50000</effort></limit></axis></joint>
+    <joint name="right_front_j" type="revolute"><child>right_front</child><parent>base_link</parent><axis><xyz>0 1 0</xyz><limit><effort>50000</effort></limit></axis></joint>
+    <joint name="right_back_j" type="revolute"><child>right_back</child><parent>base_link</parent><axis><xyz>0 1 0</xyz><limit><effort>50000</effort></limit></axis></joint>
+
+    <plugin filename="gz-sim-diff-drive-system" name="gz::sim::systems::DiffDrive">
+      <left_joint>left_front_j</left_joint>
+      <left_joint>left_back_j</left_joint>
+      <right_joint>right_front_j</right_joint>
+      <right_joint>right_back_j</right_joint>
+      <wheel_separation>3.8</wheel_separation> 
+      <wheel_radius>0.6</wheel_radius>
+      <max_torque>50000</max_torque>
+      <max_linear_acceleration>1.0</max_linear_acceleration>
+      <max_angular_acceleration>1.0</max_angular_acceleration>
+      <topic>/model/perseverance/cmd_vel</topic>
+      <odom_topic>/model/perseverance/odometry</odom_topic>
+      <publish_odom>true</publish_odom>
+      <publish_odom_tf>true</publish_odom_tf>
+      <odom_frame>perseverance/odom</odom_frame>
+      <robot_base_frame>perseverance/base_link</robot_base_frame>
+    </plugin>
+  </model>
+</sdf>

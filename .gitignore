@@ -1,0 +1,19 @@
+# ROS 2 Build files 
+build/
+install/
+log/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Archives
+*.zip
+*.tar.gz
+
+# IDE 
+.vscode/
+.DS_Store
+
