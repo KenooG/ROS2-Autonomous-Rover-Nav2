@@ -103,6 +103,6 @@ ros2 topic pub --once /rover_goal rover_interfaces/msg/RoverGoal "{target_x: 20.
 ---
 
 ## 📌 What I Learned
-* **Action Preemption:** Mastered the `Nav2` Action Client to cancel and update goals without stopping the robot.
-* **Costmap Optimization:** Tuned inflation layers to balance between collision safety and the need to get close to objects for OCR.
-* **Asynchronous C++:** Implemented non-blocking ROS 2 Service calls and timers to maintain a stable 30Hz control loop.
+* **Action Clients:** Utilized the `Nav2` Action Client (`NavigateToPose`) to asynchronously send and update goals without blocking the main thread.
+* **Costmap Configuration:** Tuned inflation layers to balance between collision safety and the need to get close to objects for OCR scanning.
+* **Asynchronous C++:** Implemented non-blocking ROS 2 Service calls and Wall Timers to ensure a responsive, real-time State Machine.
